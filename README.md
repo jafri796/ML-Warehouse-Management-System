@@ -17,7 +17,7 @@
 
 ```plaintext
 ML-Warehouse-Management-System/
-├── macos/            # MacOS-specific code and resources
-├── windows/          # Windows-specific code and resources
-├── user-manual/      # Documentation folder
-└── requirements.txt  # Shared dependencies
+├── macos/            MacOS-specific code and resources
+├── windows/          Windows-specific code and resources
+├── user-manual/      Documentation folder
+└── requirements.txt  Shared dependencies
