@@ -12,9 +12,6 @@
 - **3D Visualizations**: Visualize warehouse and truck layouts using Mayavi.
 
 ---
-![image](https://github.com/user-attachments/assets/2194f7cd-5b3f-4ecf-b5d0-dabacbcad005)
-
-
 ## Repository Structure
 
 ```plaintext
