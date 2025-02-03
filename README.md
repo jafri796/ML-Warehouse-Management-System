@@ -105,6 +105,11 @@ python main.py
 4. Push to the branch
 5. Open a Pull Request
 
+![image](https://github.com/user-attachments/assets/b5dee768-e177-400e-9b01-c60b5a6d6cdf) ![image](https://github.com/user-attachments/assets/c40ba4f6-9e6e-4017-946a-55153d483e10)
+![image](https://github.com/user-attachments/assets/ec67666c-071c-479f-99a5-31e6c874e184) ![image](https://github.com/user-attachments/assets/37fc10c1-7d6c-4894-a3b8-cf23a5c1eb1c)
+![image](https://github.com/user-attachments/assets/3099cf88-1951-4a4c-93c5-9a4f0d29ec66)
+
+
 ## 📧 Contact
 
 For support or queries, please open an issue in the repository.
