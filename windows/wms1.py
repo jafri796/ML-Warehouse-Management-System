@@ -10,6 +10,7 @@ import pandas as pd
 import re,sys, os
 import pyomo.environ as pe
 from sklearn.preprocessing import OrdinalEncoder
+from mlxtend.frequent_patterns import apriori, association_rules
 import sqlite3
 import warnings
 import logging
@@ -129,6 +130,56 @@ locs = set(locs_df['Position'])
 # print(len(locs))
 conn.close()
 
+
+def hot_encode(x):
+    if(x<= 0):
+        return 0
+    if(x>= 1):
+        return 1
+
+df = pd.DataFrame(df)        
+df2 = df.applymap(hot_encode)
+
+frq_items = apriori(df2, min_support = 0.01)
+rules = association_rules(frq_items, metric ="lift")
+rules["consequents_len"] = rules["consequents"].apply(lambda x: len(x))
+rules["antecedent_len"] = rules["antecedents"].apply(lambda x: len(x))
+rules = rules[ (rules['antecedent_len'] == 1) &
+              (rules['consequents_len'] ==1 )]
+
+new_rules = rules[['antecedents', 'consequents', 'lift']]
+lift_np = new_rules[["lift"]].to_numpy()
+
+cols = ['antecedents','consequents']
+
+new_rules[cols] = new_rules[cols].apply(lambda x: tuple(x))
+new_rules = (new_rules.explode('antecedents')
+         .reset_index(drop=True)
+         .explode('consequents')
+         .reset_index(drop=True))
+new_rules=new_rules.sort_values(['antecedents','consequents'])
+
+
+
+min_lift = np.amin(lift_np)
+max_lift = np.amax(lift_np)
+
+lift_np = (lift_np-min_lift)/(max_lift-min_lift)
+df_lift = lift_np.tolist()
+flat_lift = [x for xs in df_lift for x in xs]
+n = new_rules.columns[2]
+new_rules.drop(n, axis = 1, inplace = True)
+new_rules[n] = flat_lift
+new_rules = new_rules.reset_index(drop=True)
+nr2 = new_rules.to_numpy()
+for i in nr2:
+    j = i[2]
+    x = i[0]
+    y = i[1]
+    for r in range(wsc.shape[0]):
+      for s in range(wsc.shape[0]):
+        if r == x and s == y:
+          wsc[r][s] += j
 
 Aix = np.random.randint(2, size=(Dist.shape[0],wsc.shape[1]))
 Aix[Aix ==0] = 1
