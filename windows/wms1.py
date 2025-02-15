@@ -117,9 +117,6 @@ query0 = "SELECT * FROM Distance"
 Dist = np.array(pd.read_sql_query(query0, conn)).reshape(4420,1)
 query1 = "SELECT * FROM Turnover"
 Tk = np.array(pd.read_sql_query(query1, conn)).flatten()
-
-
-
 cursor = conn.cursor()
 cursor.execute("SELECT * FROM WSC")
 rows = cursor.fetchall()
@@ -127,43 +124,26 @@ wsc = np.array(rows).reshape(106,106)
 query2 = "SELECT * FROM Locations"
 locs_df = pd.read_sql_query(query2,conn)
 locs = set(locs_df['Position'])
-# print(len(locs))
 conn.close()
-
-
-def hot_encode(x):
-    if(x<= 0):
-        return 0
-    if(x>= 1):
-        return 1
-
 df = pd.DataFrame(df)        
 df2 = df.applymap(hot_encode)
-
 frq_items = apriori(df2, min_support = 0.01)
 rules = association_rules(frq_items, metric ="lift")
 rules["consequents_len"] = rules["consequents"].apply(lambda x: len(x))
 rules["antecedent_len"] = rules["antecedents"].apply(lambda x: len(x))
 rules = rules[ (rules['antecedent_len'] == 1) &
               (rules['consequents_len'] ==1 )]
-
 new_rules = rules[['antecedents', 'consequents', 'lift']]
 lift_np = new_rules[["lift"]].to_numpy()
-
 cols = ['antecedents','consequents']
-
 new_rules[cols] = new_rules[cols].apply(lambda x: tuple(x))
 new_rules = (new_rules.explode('antecedents')
          .reset_index(drop=True)
          .explode('consequents')
          .reset_index(drop=True))
 new_rules=new_rules.sort_values(['antecedents','consequents'])
-
-
-
 min_lift = np.amin(lift_np)
 max_lift = np.amax(lift_np)
-
 lift_np = (lift_np-min_lift)/(max_lift-min_lift)
 df_lift = lift_np.tolist()
 flat_lift = [x for xs in df_lift for x in xs]
