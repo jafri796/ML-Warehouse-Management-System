@@ -10,7 +10,7 @@ import pandas as pd
 
 import re,sys, os
 import pyomo.environ as pe
-
+from mlxtend.frequent_patterns import apriori, association_rules
 from sklearn.preprocessing import OrdinalEncoder
 import sqlite3
 import warnings
@@ -132,13 +132,6 @@ lk = df['Length'].tolist()
 hk = df['Height'].tolist()
 
 conn.close()
-
-def hot_encode(x):
-    if(x<= 0):
-        return 0
-    if(x>= 1):
-        return 1
-
 df = pd.DataFrame(df)        
 df2 = df.applymap(hot_encode)
 
